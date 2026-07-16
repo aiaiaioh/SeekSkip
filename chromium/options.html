@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Seek Skip Settings</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      padding: 20px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #111;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    input {
+      background: #000;
+      color: #fff;
+      border: 1px solid #fff;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 10px 16px;
+      background: white;
+      color: black;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      font-family: inherit;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #fff;
+      padding: 10px;
+      text-align: left;
+      word-break: break-all;
+      vertical-align: middle;
+    }
+
+    th { background: #222; }
+
+    td input { padding: 6px; }
+
+    tr[draggable="true"] { cursor: grab; }
+    tr.dragging { opacity: 0.4; }
+    tr.drag-over td { border-top: 3px solid #fff; }
+
+    .num-cell { width: 36px; text-align: center; color: #aaa; }
+
+    .order-cell { width: 60px; white-space: nowrap; text-align: center; }
+
+    .actions-cell { white-space: nowrap; }
+
+    td button, .secondary {
+      background: black;
+      border: 2px solid white;
+      padding: 5px 10px;
+      cursor: pointer;
+      color: white;
+      border-radius: 4px;
+      font-weight: normal;
+    }
+
+    td button + button { margin-left: 6px; }
+
+    .order-btn {
+      padding: 2px 8px;
+      font-size: 12px;
+    }
+
+    .order-btn:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    .toolbar-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #ddd;
+    }
+
+    .checkbox-row input {
+      width: auto;
+    }
+
+    h2 {
+      margin-top: 34px;
+    }
+
+    .secondary {
+      padding: 10px 16px;
+      font-weight: bold;
+    }
+
+    .hint {
+      color: #888;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    details {
+      background: #111;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-top: 24px;
+      line-height: 1.55;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    details h3 {
+      margin: 18px 0 6px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #ccc;
+    }
+
+    details p { margin: 6px 0; color: #ddd; font-size: 14px; }
+
+    details table { margin-top: 8px; }
+
+    details th, details td {
+      border-color: #444;
+      padding: 6px 10px;
+      font-size: 13px;
+      word-break: normal;
+    }
+
+    code {
+      background: #222;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Search Engines</h1>
+
+  <form id="engineForm">
+    <input type="text" id="engineName" placeholder="Engine Name" required>
+    <input type="url" id="engineUrl" placeholder="Search URL (e.g., https://google.com/search)" required>
+    <input type="text" id="engineParam" placeholder="Query Parameter (e.g., q)" required>
+    <button type="submit">Add Engine</button>
+    <p class="hint">Engines sync across devices signed into the same browser profile.
+      Drag rows (or use the arrows) to reorder — the toolbar shows buttons in this order.</p>
+  </form>
+
+  <table id="engineTable">
+    <thead>
+      <tr>
+        <th class="num-cell">#</th>
+        <th>Name</th>
+        <th>URL</th>
+        <th>Parameter</th>
+        <th class="order-cell">Order</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="toolbar-row">
+    <button id="exportEngines" class="secondary" type="button">Export</button>
+    <button id="importEngines" class="secondary" type="button">Import</button>
+    <button id="resetDefaults" class="secondary" type="button">Reset to defaults</button>
+    <input type="file" id="importFile" accept=".json,application/json" hidden>
+  </div>
+
+  <h2>Venice.ai</h2>
+  <form id="veniceForm">
+    <label class="checkbox-row">
+      <input type="checkbox" id="veniceEnabled" checked>
+      Show "Venice" button on the toolbar
+    </label>
+    <input type="url" id="veniceUrl" placeholder="Venice chat URL (default: https://venice.ai/chat/agent)">
+    <label class="checkbox-row">
+      <input type="checkbox" id="veniceAutoSubmit" checked>
+      Auto-submit after entering the query (untick to just pre-fill)
+    </label>
+    <div class="toolbar-row" style="margin-top: 0;">
+      <button type="submit">Save</button>
+    </div>
+    <p id="veniceStatus" class="hint"></p>
+    <p class="hint">Clicking "Venice" opens Venice chat in a new tab and types your
+      search query into the chat box for you (Venice has no URL prefill parameter, so
+      the extension does the typing). No API key needed &mdash; this uses your normal
+      logged-in Venice session. If Venice redesigns their chat box, the auto-typing may
+      stop working until this extension is updated.</p>
+  </form>
+
+  <details>
+    <summary>Query parameters — a field guide</summary>
+
+    <h3>What it is</h3>
+    <p>The query parameter is the key in a search URL that carries your search terms:
+      the <code>q</code> in <code>google.com/search?<b>q</b>=cats</code>. Seek Skip
+      uses it in both directions — it <em>reads</em> the parameter to detect what you
+      searched on the current engine, and <em>writes</em> it to build the same search
+      on another engine. Everything after <code>?</code> is a list of
+      <code>key=value</code> pairs separated by <code>&amp;</code>; only the one key
+      you configure here matters to this extension.</p>
+
+    <h3>How to find an engine's parameter</h3>
+    <p>Search for something unmistakable, like <code>TESTQUERY123</code>, then look at
+      the address bar and find which <code>key=</code> is holding it. That key is the
+      parameter. If your search terms appear in the URL <em>path</em> instead
+      (<code>example.com/search/TESTQUERY123</code>) rather than after a
+      <code>?key=</code>, see the limitations below.</p>
+
+    <h3>Common parameters</h3>
+    <table>
+      <tr><th>Parameter</th><th>Used by</th></tr>
+      <tr><td><code>q</code></td><td>Google, Bing, DuckDuckGo, Brave, Startpage, Qwant, Ecosia, Kagi, Perplexity, Claude (<code>claude.ai/new</code>)</td></tr>
+      <tr><td><code>text</code></td><td>Yandex</td></tr>
+      <tr><td><code>p</code></td><td>Yahoo</td></tr>
+      <tr><td><code>wd</code></td><td>Baidu</td></tr>
+      <tr><td><code>search_query</code></td><td>YouTube</td></tr>
+      <tr><td><code>k</code></td><td>Amazon</td></tr>
+      <tr><td><code>_nkw</code></td><td>eBay</td></tr>
+      <tr><td><code>search</code></td><td>Wikipedia (<code>en.wikipedia.org/w/index.php</code>)</td></tr>
+    </table>
+    <p><code>q</code> is the de facto standard — if you're guessing, guess
+      <code>q</code> first.</p>
+
+    <h3>Which URL to pair it with</h3>
+    <p>Use the engine's <em>results page</em> URL with the query string stripped:
+      search for something, then delete everything from <code>?</code> onward.
+      <code>https://www.google.com/search</code>, not <code>https://www.google.com</code> —
+      the homepage often doesn't accept the parameter, or redirects. Exception:
+      DuckDuckGo genuinely searches from its root (<code>duckduckgo.com/?q=</code>).</p>
+
+    <h3>Behavior worth knowing</h3>
+    <p><b>Encoding is automatic.</b> Spaces, <code>&amp;</code>, quotes, and non-ASCII
+      characters are URL-encoded when building links and decoded when reading them —
+      enter the parameter name only, never <code>q=</code> or a sample value.</p>
+    <p><b>Only the query hops.</b> Extra parameters on the current page (language,
+      region, safe-search, time filters) are engine-specific and are dropped when
+      you switch. Your search terms carry over; your filters don't.</p>
+    <p><b>Detection is per-hostname.</b> An engine is "recognized" when the page's
+      hostname matches the engine URL's hostname (www. is ignored). Two engines on
+      the same hostname with different parameters: only the first match wins.</p>
+
+    <h3>Limitations</h3>
+    <p><b>Path-based results pages</b> — some sites accept a query parameter inbound
+      but immediately rewrite the URL to a path or ID (Perplexity's
+      <code>/search/slug</code>, Claude's <code>/chat/uuid</code>). These work as hop
+      <em>targets</em> but can't be detected as the <em>current</em> engine, so no
+      toolbar appears on them.</p>
+    <p><b>POST-based search forms</b> — a few privacy frontends (e.g. some SearXNG
+      instances in POST mode) send the query in the request body, not the URL.
+      There's nothing in the URL to read or build, so those can't be supported
+      either direction. Most have a GET mode you can enable.</p>
+    <p><b>Fragment queries</b> — parameters after a <code>#</code> instead of
+      <code>?</code> aren't read. Rare in the wild.</p>
+  </details>
+
+  <script src="options.js"></script>
+</body>
+</html>

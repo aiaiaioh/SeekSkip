@@ -1,0 +1,78 @@
+#seek-skip-container.switcher-container {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    transform-origin: bottom center;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 5px 8px;
+    z-index: 2147483647;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: 16px;
+    opacity: 0;
+    transition: transform 0.35s ease-out, opacity 0.35s ease-out;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+#seek-skip-container.switcher-container.visible {
+    transform: translateX(-50%) translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* Dormant: half size, half opacity — until hovered */
+#seek-skip-container.switcher-container.visible.dormant:not(:hover) {
+    transform: translateX(-50%) translateY(0) scale(0.5);
+    opacity: 0.5;
+}
+
+#seek-skip-container .switcher-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 13px;
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 14px;
+    transition: background 0.3s, transform 0.2s;
+}
+
+#seek-skip-container .switcher-button:hover {
+    background: white;
+    color: black;
+    transform: scale(1.06);
+}
+
+#seek-skip-container .switcher-button:active {
+    transform: scale(0.9);
+}
+
+#seek-skip-container .switcher-icon {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    pointer-events: none;
+}
+
+#seek-skip-container .switcher-close {
+    padding: 0 6px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.6);
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    border-radius: 50%;
+    transition: color 0.2s;
+}
+
+#seek-skip-container .switcher-close:hover {
+    color: white;
+}
