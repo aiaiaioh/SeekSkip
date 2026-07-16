@@ -78,26 +78,16 @@ Venice UI redesign may break it until selectors are updated.
 ### Firefox
 Install from [AMO](https://addons.mozilla.org/en-US/firefox/addon/seek-skip/).
 
-For development: `about:debugging#/runtime/this-firefox` → **Load Temporary
-Add-on** → select `firefox/manifest.json`. Cleared on browser restart.
+Manual Install:
+1. Download the firefox folder
+2. Go to the addons manager (about:addons)
+3. Click the settings icon and select 'Install Add-on From File..."
+4. Select the downloaded `firefox.zip` 
 
 ### Chromium (Chrome, Brave, Edge, Vivaldi, …)
-1. Clone or download this repository.
+1. Download the chromium folder and extract it.
 2. Go to `chrome://extensions`, enable **Developer mode**.
-3. **Load unpacked** → select the `chromium/` folder.
-
-## Packaging for store upload
-
-Both stores require a zip with `manifest.json` at the root (no wrapper folder).
-From inside the relevant source folder:
-
-```bash
-cd firefox && zip -r ../seekskip-firefox.zip .      # bash
-```
-
-```powershell
-Compress-Archive -Path firefox\* -DestinationPath seekskip-firefox.zip   # PowerShell
-```
+3. **Load unpacked** → select the `chromium` folder.
 
 ## Adding an engine
 
