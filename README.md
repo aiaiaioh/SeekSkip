@@ -69,13 +69,13 @@ Venice UI redesign may break it until selectors are updated.
 Install from [Firefox Addons Store](https://addons.mozilla.org/en-US/firefox/addon/seek-skip/).
 
 Manual Install:
-1. Download `firefox.zip` from [releases](https://github.com/aiaiaioh/SeekSkip/releases/tag/v2.4.4).
-2. Go to the addons manager (`about:addons`).
+1. Download `firefox.zip` from [releases](https://github.com/aiaiaioh/SeekSkip/releases/tag/v2.4.4), do not extract.
+2. Go to the firefox addons manager (`about:addons`).
 3. Click the settings icon and select `Install Add-on From File...`.
 4. Select the downloaded `firefox.zip` file.
 
 ### Chromium (Chrome, Brave, Edge, Vivaldi, …)
-1. Download `chromium.zip` from [releases](https://github.com/aiaiaioh/SeekSkip/releases/tag/v2.4.4) extract it.
+1. Download `chromium.zip` from [releases](https://github.com/aiaiaioh/SeekSkip/releases/tag/v2.4.4) and extract it.
 2. Go to extensions manager `chrome://extensions` in browser and enable `Developer mode`.
 3. Click `Load unpacked` and select the extracted `chromium` folder.
 
